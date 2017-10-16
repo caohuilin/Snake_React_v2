@@ -1,0 +1,25 @@
+import * as React from 'react';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
+import { syncHistoryWithStore } from 'react-router-redux';
+import App from './containers';
+import configureStore from './store/configureStore';
+
+declare var module: any;
+declare var require: any;
+
+export const store: any = configureStore({});
+export const history = syncHistoryWithStore(browserHistory, store);
+
+const Appx = React.createClass({
+  render() {
+    return (
+      <Provider store={store}>
+        <Router history={history}>
+          <Route path="/" component={App} />
+        </Router>
+      </Provider>
+    );
+  }
+});
+export default Appx;

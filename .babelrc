@@ -1,0 +1,6 @@
+{
+    "plugins":[
+        "react-hot-loader/babel",
+        "transform-regenerator"
+    ]
+}
