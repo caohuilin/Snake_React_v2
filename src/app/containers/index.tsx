@@ -2,8 +2,11 @@ import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as FontAwesome from 'react-fontawesome';
+import Number from '../components/Number';
 import './style.less';
-const backgroundImg = require('../resources/images/snack.png');
+
+const snakeImg = require('../resources/images/snack.png');
+const robotImg = require('../resources/images/robot.png');
 
 interface IAppProps {
 }
@@ -53,11 +56,25 @@ class App extends React.Component<IAppProps, any> {
                 <div className='left'>
                   {
                     [].fill.call(new Array(247),0).map((item, i) => {
-                      return <div className='cell'></div>;
+                      return <div className='cell' key={i}></div>;
                     })
                   }
                 </div>
-                <div className='right'></div>
+                <div className='right'>
+                  <div className='record'>
+                    <label>分数：</label>
+                    <Number number={2} />
+                    <img src={snakeImg} />
+                  </div>
+                  <div className='level'>
+                    <label>难度：</label>
+                    <Number number={2} />
+                  </div>
+                  <div className='time'>
+                    <Number time={true} />
+                    <img src={robotImg} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -71,15 +88,11 @@ class App extends React.Component<IAppProps, any> {
                   </li>
                   <li>
                     <button></button>
-                    <FontAwesome name='gamepad' />
+                    <FontAwesome name='pause' />
                   </li>
                   <li>
                     <button></button>
-                    <FontAwesome name='play' />
-                  </li>
-                  <li>
-                    <button></button>
-                    <FontAwesome name='cog' />
+                    <FontAwesome name='undo' />
                   </li>
                 </ul>
               </div>
@@ -89,35 +102,33 @@ class App extends React.Component<IAppProps, any> {
                     <button></button>
                     <FontAwesome name='bolt' />
                   </li>
-                  <li>
-                    <button></button>
-                    <FontAwesome name='pause' />
-                  </li>
                 </ul>
               </div>
             </div>
             <div className='right'>
-              <div className='top'>
-                <button><FontAwesome name='angle-double-up' /></button>
-              </div>
-              <div className='center'>
-                <button><FontAwesome name='angle-double-left' /></button>
-                <div className='icon'>
-                  <div className='top'>
-                    <FontAwesome name='caret-up' />
-                  </div>
-                  <div className='center'>
-                    <FontAwesome name='caret-left' />
-                    <FontAwesome name='caret-right' />
-                  </div>
-                  <div className='bottom'>
-                    <FontAwesome name='caret-down' />
-                  </div>
+              <div className='direction'>
+                <div className='top'>
+                  <button><FontAwesome name='angle-double-up' /></button>
                 </div>
-                <button><FontAwesome name='angle-double-right' /></button>
-              </div>
-              <div className='bottom'>
-                <button><FontAwesome name='angle-double-down' /></button>
+                <div className='center'>
+                  <button><FontAwesome name='angle-double-left' /></button>
+                  <div className='icon'>
+                    <div className='top'>
+                      <FontAwesome name='caret-up' />
+                    </div>
+                    <div className='center'>
+                      <FontAwesome name='caret-left' />
+                      <FontAwesome name='caret-right' />
+                    </div>
+                    <div className='bottom'>
+                      <FontAwesome name='caret-down' />
+                    </div>
+                  </div>
+                  <button><FontAwesome name='angle-double-right' /></button>
+                </div>
+                <div className='bottom'>
+                  <button><FontAwesome name='angle-double-down' /></button>
+                </div>
               </div>
             </div>
           </div>
