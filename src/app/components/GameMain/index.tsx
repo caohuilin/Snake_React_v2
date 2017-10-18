@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { ExceptHeight, Row, deSX, deSY } from '../../constants';
+import { ExceptHeight, Row, deX, deY } from '../../constants';
 import Logo from '../Logo';
 import * as WindowActions from '../../actions/window';
 import * as GameActions from '../../actions/game';
