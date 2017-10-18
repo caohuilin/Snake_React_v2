@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import * as Immutable from 'immutable';
 const ISnakeRecord = Immutable.Record({
-  snake: Immutable.List([
+  snake: Immutable.fromJS([
     {
       x: 0,
       y: 0
@@ -20,6 +20,6 @@ const initialState = new (ISnake);
 
 export default handleActions({
   'set snake'(state: ISnake = initialState, action: any) {
-    return state.set('snake', Immutable.List(action.payload));
+    return state.set('snake', Immutable.fromJS(action.payload));
   }
 }, initialState);

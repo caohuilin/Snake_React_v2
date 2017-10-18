@@ -11,7 +11,7 @@ export class IDirection extends IDirectionRecord {
 const initialState = new (IDirection);
 
 export default handleActions({
-  'change snake direction'(state: IDirection, action: any) {
+  'set snake direction'(state: IDirection, action: any) {
     return state.set('snake', action.payload);
   }
 }, initialState);
