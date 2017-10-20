@@ -13,10 +13,12 @@ interface IGameMainProps {
   snake?: any;
   food?: any;
   direction?: any;
+  game?: any;
 }
 
 interface IGameMainState {
-  showFood: boolean;
+  showFood?: boolean;
+  start?: any;
 }
 
 @connect(
@@ -24,7 +26,8 @@ interface IGameMainState {
     column: state.column.get('cnt'),
     snake: state.snake.get('snake'),
     food: state.food.get('food'),
-    direction: state.direction
+    direction: state.direction,
+    game: state.game
   }),
   dispatch => ({
     actions: bindActionCreators(
@@ -43,10 +46,12 @@ export default class GameMain extends React.Component<
 > {
   timer = null;
   foodTimer = null;
+  startTimer = null;
   constructor(props: IGameMainProps) {
     super(props);
     this.state = {
-      showFood: true
+      showFood: true,
+      start: [{x: this.props.column - 1, y: 0, de: 0, pm: 1, index: 1}],
     };
   }
   handleResize = () => {
@@ -64,14 +69,28 @@ export default class GameMain extends React.Component<
     this.timer = setInterval(this.goNext, 500);
     this.foodTimer = setInterval(this.setFoodShowOrHide, 200);
   }
+  isDead(node: {x: number, y: number}) {
+    const snake = this.props.snake.toJS();
+    return snake.filter(item => item.x === node.x && item.y === node.y).length !== 0;
+  }
   goNext = () => {
     const { snake, direction, food } = this.props;
     const currentSnake = snake.toJS();
+    const currentFood = food.toJS();
     let next = this.getNext(currentSnake[0], direction.get('snake'));
+    if (this.isDead(next)) {
+      clearInterval(this.timer);
+      clearInterval(this.foodTimer);
+      this.props.actions.setGameInit(-1);
+      this.props.actions.initSnack();
+      this.startTimer = setInterval(this.renderStart, 10);
+      return;
+    }
     currentSnake.unshift(next);
-    if (next.x !== food.toJS().x || next.y !== food.toJS().y) {
+    if (next.x !== currentFood.x || next.y !== currentFood.y) {
       currentSnake.pop();
     } else {
+      this.props.actions.getCode();
       this.props.actions.setFood();
     }
     this.props.actions.setSnack(currentSnake);
@@ -92,7 +111,12 @@ export default class GameMain extends React.Component<
   keyDown = (event: any) => {
     let direction = this.props.direction.get('snake');
     const code = event.nativeEvent.keyCode;
-    if (code === 38 && direction !== 1) {
+    if (code === 38 && this.props.game.get('init') === 0) {
+      this.props.actions.setGameInit(1);
+      this.props.actions.clearCode();
+      this.setState({ start: [{x: this.props.column - 1, y: 0, de: 0, pm: 1, index: 1}] });
+      this.startGame();
+    } else if (code === 38 && direction !== 1) {
       direction = 0;
     } else if (code === 40 && direction !== 0) {
       direction = 1;
@@ -103,18 +127,60 @@ export default class GameMain extends React.Component<
     }
     this.props.actions.setSnackDirection(direction);
   }
+  getNewXY = (start) => {
+    const column = this.props.column;
+    let next: {x?: number, y?: number, de?: number, pm?: number, index?: number} = {};
+    const {x, y, de, pm, index} = start;
+    next.x = de === 1 ? x + pm : x;
+    next.y = de === 0 ? y + pm : y;
+    next.de = de;
+    next.pm = pm;
+    next.index = index;
+    if (next.x === column - index - 1 && next.y === index - 1 && next.x !== Math.floor(column / 2) && next.y !== Math.floor(Row / 2)) {
+      next.index += 1;
+    }
+    if (de === 0 && (next.y === Row - next.index || (next.y === next.index - 1 && next.x === index - 1))) {
+      next.de = 1;
+    }
+    if (de === 1 && (next.x === column - next.index || next.x === next.index - 1)) {
+      next.de = 0;
+    }
+    if (next.y === Row - next.index && next.x === column - next.index) {
+      next.pm = -1;
+    }
+    if (next.y === next.index - 1 && next.x === next.index - 1) {
+      next.pm = 1;
+    }
+
+    if (next.x ===  Math.floor(Row / 2) && next.y === Math.floor(Row / 2)) {
+      this.props.actions.setGameInit(0);
+      if (this.startTimer) { clearInterval(this.startTimer); };
+    }
+    return next;
+  }
+  renderStart = () => {
+    let start = this.state.start;
+    const length = start.length;
+    const nextXY = this.getNewXY(start[length - 1]);
+    start.push(nextXY);
+    this.setState({start: start});
+  }
   componentDidMount() {
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
-
-    this.startGame();
+    this.startTimer = setInterval(this.renderStart, 10);
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+    clearTimeout(this.foodTimer);
+    clearTimeout(this.startTimer);
   }
   render() {
-    const { column, snake, food } = this.props;
-    const { showFood } = this.state;
+    const { column, snake, food, game } = this.props;
+    const { showFood, start } = this.state;
     return (
       <div className='left' onKeyDown={this.keyDown} tabIndex={0}>
-        <Logo cur={true} reset={false} />
+        {game.get('init') === 0 && <Logo />}
         {
           [].fill.call(new Array(column), 0).map((item, i) => {
             return [].fill.call(new Array(Row), 0).map((item, j) => {
@@ -123,11 +189,16 @@ export default class GameMain extends React.Component<
           })
         }
         {
-          snake.map((item, i) => {
+          game.get('init') === 1 && snake.map((item, i) => {
             return <div key={i} style={this.getSnakePosition(item.toJS())} className='cell snake-cell'></div>;
           })
         }
-        <div style={this.getSnakePosition(food.toJS())} className={`cell ${showFood ? 'food-o-cell' : 'food-cell'}`}></div>
+        { game.get('init') === 1 &&  <div style={this.getSnakePosition(food.toJS())} className={`cell ${showFood ? 'food-o-cell' : 'food-cell'}`}></div>}
+        {
+          game.get('init') === -1 && start.map((item, i) => {
+            return <div key={i} style={this.getSnakePosition(item)} className='cell snake-cell'></div>;
+          })
+        }
       </div>
     );
   }
