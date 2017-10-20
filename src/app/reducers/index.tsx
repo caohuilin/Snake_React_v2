@@ -4,13 +4,15 @@ import column from './column';
 import snake from './snake';
 import direction from './direction';
 import food from './food';
+import game from './game';
 
 const rootReducer = combineReducers({
   routing,
   column,
   snake,
   direction,
-  food
+  food,
+  game
 });
 
 export default rootReducer;

@@ -2,8 +2,6 @@ import * as React from 'react';
 import './style.less';
 
 interface ILogoProps {
-  cur: boolean;
-  reset: boolean;
 }
 
 interface ILogoState {
@@ -21,32 +19,14 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
     };
   }
   componentWillMount() {
-    this.animate(this.props);
+    this.animate();
   }
-  componentWillReceiveProps(nextProps: ILogoProps) {
-    if ( // 只有在游戏进入开始, 或结束时 触发改变
-      (
-        [this.props.cur, nextProps.cur].indexOf(false) !== -1 &&
-        (this.props.cur !== nextProps.cur)
-      ) ||
-      (this.props.reset !== nextProps.reset)
-    ) {
-      this.animate(nextProps);
-    }
-  }
-  shouldComponentUpdate({ cur, reset }: ILogoProps): boolean {
-    return cur !== this.props.cur || reset !== this.props.reset || !cur;
-  }
-  animate({ cur, reset }: ILogoProps) {
+  animate = () => {
     clearTimeout(this.timeout);
     this.setState({
       style: 'r1',
       display: 'none',
     });
-    if (cur || reset) {
-      this.setState({ display: 'none' });
-      return;
-    }
 
     let m = 'r'; // 方向
     let count = 0;
@@ -137,10 +117,10 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
       });
     });
   }
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
   render() {
-    if (this.props.cur) {
-      return null;
-    }
     return (
       <div className='logo' style={{ display: this.state.display }}>
         <div className={`bg dragon ${this.state.style}`} />

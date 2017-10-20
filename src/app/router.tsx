@@ -11,6 +11,9 @@ declare var require: any;
 export const store: any = configureStore({});
 export const history = syncHistoryWithStore(browserHistory, store);
 
+export function getStore(){
+  return store
+}
 const Appx = React.createClass({
   render() {
     return (
