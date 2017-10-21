@@ -179,7 +179,6 @@ export default class GameMain extends React.Component<
     if (!nextProps.game.get('start') && this.props.game.get('start')) {
       clearInterval(this.timer);
       clearInterval(this.foodTimer);
-      this.startTimer = setInterval(this.renderInit, 10);
     }
     if (nextProps.game.get('pause') && !this.props.game.get('pause')) {
       clearInterval(this.timer);
@@ -190,9 +189,9 @@ export default class GameMain extends React.Component<
     }
   }
   componentWillUnmount() {
-    clearTimeout(this.timer);
-    clearTimeout(this.foodTimer);
-    clearTimeout(this.startTimer);
+    clearInterval(this.timer);
+    clearInterval(this.foodTimer);
+    clearInterval(this.startTimer);
   }
   render() {
     const { column, snake, food, game } = this.props;

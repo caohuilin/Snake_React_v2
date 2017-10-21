@@ -77,7 +77,7 @@ class App extends React.Component<IAppProps, IAppState> {
     } else if (init === -2) {// 设置游戏模式
       if (code === 37 || code === 39) {
         this.props.actions.setModal();
-      } else if (code === 38) {
+      } else if (code === 2) {
         this.props.actions.setGameInit(1);
         this.props.actions.startGame();
       }
