@@ -38,15 +38,21 @@ class App extends React.Component<IAppProps, IAppState> {
   constructor(props: IAppProps) {
     super(props);
   }
-  keyDown = (event: any) => {
-    const code = event.nativeEvent.keyCode;
+  handleKeyDown = (code) => {
     const init = this.props.game.get('init');
-    if (init === 0) {// 初始化完毕
-      if (code === 38 ) {// 开始游戏
+    if (code === 1) {
+      this.props.actions.setVolume();
+    } else if (code === 0) {
+      this.props.actions.endGame();
+      this.props.actions.setGameInit(-1);
+      this.props.actions.initSnack();
+      setTimeout(this.handleKeyDown.bind(null, 2), 0);
+    } else if (init === 0) {// 初始化完毕
+      if (code === 2 ) {// 开始游戏
         this.props.actions.setGameInit(1);
         this.props.actions.clearCode();
         this.props.actions.startGame();
-      } else if (code === 40) {// 设置游戏模式
+      } else if (code === 3) {// 设置游戏模式
         this.props.actions.setGameInit(-2);
       }
     } else if (init === 1) {// 游戏中
@@ -61,6 +67,11 @@ class App extends React.Component<IAppProps, IAppState> {
         direction = 3;
       } else if (code === 32) {
         this.props.actions.pauseGame();
+      } else if (code === 4) {
+        this.props.actions.pauseGame({pause: true});
+      } else if (code === 2) {
+        this.props.actions.pauseGame({pause: false});
+        this.props.actions.startGame();
       }
       this.props.actions.setSnackDirection(direction);
     } else if (init === -2) {// 设置游戏模式
@@ -70,7 +81,13 @@ class App extends React.Component<IAppProps, IAppState> {
         this.props.actions.setGameInit(1);
         this.props.actions.startGame();
       }
+    } else if (init === -1 && code === 2) {// 初始化中
+      setTimeout(this.handleKeyDown.bind(null, 2), 0);
     }
+  }
+  keyDown = (event: any) => {
+    const code = event.nativeEvent.keyCode;
+    this.handleKeyDown(code);
   }
   render() {
     return (
@@ -85,7 +102,7 @@ class App extends React.Component<IAppProps, IAppState> {
               </div>
             </div>
           </div>
-          <KeyBoard />
+          <KeyBoard handleKeyDown={this.handleKeyDown}/>
         </div>
       </div>
     );

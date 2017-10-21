@@ -42,7 +42,7 @@ export default class ScreenInfo extends React.Component<IScreenInfoProps, IScree
         <Number number={game.get('modal')} />
       </div>
       <div className='set'>
-        <Music data={false} />
+        <Music data={!game.get('volume')} />
         <Pause data={game.get('pause')} />
       </div>
       <div className='time'>

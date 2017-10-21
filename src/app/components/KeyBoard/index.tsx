@@ -3,6 +3,7 @@ import * as FontAwesome from 'react-fontawesome';
 import './style.less';
 
 interface IKeyBoardProps {
+  handleKeyDown: any;
 }
 
 interface IKeyBoardState {
@@ -12,6 +13,9 @@ export default class KeyBoard extends React.Component<
   IKeyBoardProps,
   IKeyBoardState
 > {
+  handleClick = (type) => {
+    this.props.handleKeyDown(type);
+  }
   render() {
     return (
       <div className='keyboard'>
@@ -19,15 +23,19 @@ export default class KeyBoard extends React.Component<
         <div className='top'>
           <ul>
             <li>
-              <button></button>
+              <button onClick={this.handleClick.bind(null, 1)}></button>
               <FontAwesome name='volume-off' />
             </li>
             <li>
-              <button></button>
+              <button onClick={this.handleClick.bind(null, 3)}></button>
+              <FontAwesome name='cog' />
+            </li>
+            <li>
+              <button onClick={this.handleClick.bind(null, 4)}></button>
               <FontAwesome name='pause' />
             </li>
             <li>
-              <button></button>
+              <button onClick={this.handleClick.bind(null, 0)}></button>
               <FontAwesome name='undo' />
             </li>
           </ul>
@@ -35,8 +43,8 @@ export default class KeyBoard extends React.Component<
         <div className='bottom'>
           <ul>
             <li>
-              <button></button>
-              <FontAwesome name='bolt' />
+              <button onClick={this.handleClick.bind(null, 2)}></button>
+              <FontAwesome name='play' />
             </li>
           </ul>
         </div>
@@ -44,10 +52,10 @@ export default class KeyBoard extends React.Component<
       <div className='right'>
         <div className='direction'>
           <div className='top'>
-            <button><FontAwesome name='angle-double-up' /></button>
+            <button onClick={this.handleClick.bind(null, 38)}><FontAwesome name='angle-double-up' /></button>
           </div>
           <div className='center'>
-            <button><FontAwesome name='angle-double-left' /></button>
+            <button onClick={this.handleClick.bind(null, 37)}><FontAwesome name='angle-double-left' /></button>
             <div className='icon'>
               <div className='top'>
                 <FontAwesome name='caret-up' />
@@ -60,10 +68,10 @@ export default class KeyBoard extends React.Component<
                 <FontAwesome name='caret-down' />
               </div>
             </div>
-            <button><FontAwesome name='angle-double-right' /></button>
+            <button onClick={this.handleClick.bind(null, 39)}><FontAwesome name='angle-double-right' /></button>
           </div>
           <div className='bottom'>
-            <button><FontAwesome name='angle-double-down' /></button>
+            <button onClick={this.handleClick.bind(null, 40)}><FontAwesome name='angle-double-down' /></button>
           </div>
         </div>
       </div>
