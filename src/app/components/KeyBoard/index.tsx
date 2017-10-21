@@ -68,6 +68,6 @@ export default class KeyBoard extends React.Component<
         </div>
       </div>
     </div>
-    )
+    );
   }
 }

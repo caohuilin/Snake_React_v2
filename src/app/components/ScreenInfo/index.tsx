@@ -9,7 +9,7 @@ const snakeImg = require('../../resources/images/snack.png');
 const robotImg = require('../../resources/images/robot.png');
 
 interface IScreenInfoProps {
-  game: any;
+  game?: any;
 }
 interface IScreenInfoState {
 }
@@ -38,8 +38,8 @@ export default class ScreenInfo extends React.Component<IScreenInfoProps, IScree
         <img src={snakeImg} />
       </div>
       <div className='level'>
-        <label>难度：</label>
-        <Number number={2} />
+        <label>模式</label>
+        <Number number={game.get('modal')} />
       </div>
       <div className='set'>
         <Music data={false} />
@@ -50,6 +50,6 @@ export default class ScreenInfo extends React.Component<IScreenInfoProps, IScree
         <Number time={true} />
       </div>
     </div>
-    )
+    );
   }
 }

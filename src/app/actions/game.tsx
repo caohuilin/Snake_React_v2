@@ -7,3 +7,6 @@ export const setSnackDirection = createAction('set snake direction');
 export const setGameInit = createAction('set game init');
 export const getCode = createAction('get code');
 export const clearCode = createAction('clear code');
+export const setModal = createAction('set modal');
+export const startGame = createAction('start game');
+export const endGame = createAction('end game');
