@@ -35,10 +35,15 @@ interface IAppState {
   })
 )
 class App extends React.Component<IAppProps, IAppState> {
+  handling: boolean = false;
   constructor(props: IAppProps) {
     super(props);
   }
   handleKeyDown = (code) => {
+    if (this.handling) {
+      return;
+    }
+    this.handling = true;
     const init = this.props.game.get('init');
     if (code === 1) {
       this.props.actions.setVolume();
@@ -84,6 +89,10 @@ class App extends React.Component<IAppProps, IAppState> {
     } else if (init === -1 && code === 2) {// 初始化中
       setTimeout(this.handleKeyDown.bind(null, 2), 0);
     }
+    setTimeout(this.resetHandle, 500);
+  }
+  resetHandle = () => {
+    this.handling = false;
   }
   keyDown = (event: any) => {
     const code = event.nativeEvent.keyCode;
