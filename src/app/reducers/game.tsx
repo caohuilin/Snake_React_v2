@@ -6,6 +6,7 @@ const IGameRecord = Immutable.Record({
   code: 0,
   modal: 0,
   start: false,
+  pause: false
 });
 
 export class IGame extends IGameRecord {
@@ -13,6 +14,7 @@ export class IGame extends IGameRecord {
   code: number;
   modal: number;
   start: boolean;
+  pause: boolean;
 }
 
 const initialState = new (IGame);
@@ -36,5 +38,8 @@ export default handleActions({
   },
   'end game'(state: IGame) {
     return state.set('start', false);
+  },
+  'pause game'(state: IGame) {
+    return state.set('pause', !state.get('pause'));
   }
 }, initialState);

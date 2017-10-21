@@ -10,3 +10,4 @@ export const clearCode = createAction('clear code');
 export const setModal = createAction('set modal');
 export const startGame = createAction('start game');
 export const endGame = createAction('end game');
+export const pauseGame = createAction('pause game');

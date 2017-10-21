@@ -176,6 +176,13 @@ export default class GameMain extends React.Component<
       this.setState({ start: [{x: this.props.column - 1, y: 0, de: 0, pm: 1, index: 1}] });
       this.startGame();
     }
+    if (nextProps.game.get('pause') && !this.props.game.get('pause')) {
+      clearInterval(this.timer);
+      clearInterval(this.foodTimer);
+    }
+    if (!nextProps.game.get('pause') && this.props.game.get('pause')) {
+      this.startGame();
+    }
   }
   componentWillUnmount() {
     clearTimeout(this.timer);

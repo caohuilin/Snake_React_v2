@@ -41,15 +41,15 @@ class App extends React.Component<IAppProps, IAppState> {
   keyDown = (event: any) => {
     const code = event.nativeEvent.keyCode;
     const init = this.props.game.get('init');
-    if (init === 0) {
-      if (code === 38 ) {
+    if (init === 0) {// 初始化完毕
+      if (code === 38 ) {// 开始游戏
         this.props.actions.setGameInit(1);
         this.props.actions.clearCode();
         this.props.actions.startGame();
-      } else if (code === 40) {
+      } else if (code === 40) {// 设置游戏模式
         this.props.actions.setGameInit(-2);
       }
-    } else if (init === 1) {
+    } else if (init === 1) {// 游戏中
       let direction = this.props.direction.get('snake');
       if (code === 38 && direction !== 1) {
         direction = 0;
@@ -59,9 +59,11 @@ class App extends React.Component<IAppProps, IAppState> {
         direction = 2;
       } else if (code === 39 && direction !== 2) {
         direction = 3;
+      } else if (code === 32) {
+        this.props.actions.pauseGame();
       }
       this.props.actions.setSnackDirection(direction);
-    } else if (init === -2) {
+    } else if (init === -2) {// 设置游戏模式
       if (code === 37 || code === 39) {
         this.props.actions.setModal();
       } else if (code === 38) {

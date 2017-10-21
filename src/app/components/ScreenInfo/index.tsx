@@ -43,7 +43,7 @@ export default class ScreenInfo extends React.Component<IScreenInfoProps, IScree
       </div>
       <div className='set'>
         <Music data={false} />
-        <Pause data={false} />
+        <Pause data={game.get('pause')} />
       </div>
       <div className='time'>
         <img src={robotImg} />
