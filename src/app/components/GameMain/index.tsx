@@ -18,7 +18,15 @@ interface IGameMainProps {
 
 interface IGameMainState {
   showFood?: boolean;
-  start?: any;
+  start?: Array<IStartNode>;
+}
+
+interface IStartNode {
+  x?: number;
+  y?: number;
+  de?: number;
+  pm?: number;
+  index?: number;
 }
 
 @connect(
@@ -60,7 +68,7 @@ export default class GameMain extends React.Component<
     const column = Math.floor(gameHeight / Row);
     this.props.actions.resetColumn(column);
   }
-  getSnakePosition = ({x, y}: {x: number, y: number}) => {
+  getSnakePosition = ({x, y}: IStartNode) => {
     return { transform: `translate(${y * 15 + y}px, ${x * 15 + x}px)` };
   }
   startGame = () => {
@@ -69,9 +77,19 @@ export default class GameMain extends React.Component<
     this.timer = setInterval(this.goNext, 500);
     this.foodTimer = setInterval(this.setFoodShowOrHide, 200);
   }
-  isDead(node: {x: number, y: number}) {
+  isDead({x, y}: {x: number, y: number}) {
+    const { game, column } = this.props;
+    if (game.get('modal') === 1 && (x === 0 || y === 0 || x === column || y === Row) ) {
+      return true;
+    }
     const snake = this.props.snake.toJS();
-    return snake.filter(item => item.x === node.x && item.y === node.y).length !== 0;
+    return snake.filter(item => item.x === x && item.y === y).length !== 0;
+  }
+  dead = () => {
+    this.props.actions.endGame();
+    this.props.actions.setGameInit(-1);
+    this.props.actions.initSnack();
+    this.startTimer = setInterval(this.renderInit, 10);
   }
   goNext = () => {
     const { snake, direction, food } = this.props;
@@ -79,11 +97,9 @@ export default class GameMain extends React.Component<
     const currentFood = food.toJS();
     let next = this.getNext(currentSnake[0], direction.get('snake'));
     if (this.isDead(next)) {
+      this.dead();
       clearInterval(this.timer);
       clearInterval(this.foodTimer);
-      this.props.actions.setGameInit(-1);
-      this.props.actions.initSnack();
-      this.startTimer = setInterval(this.renderStart, 10);
       return;
     }
     currentSnake.unshift(next);
@@ -96,41 +112,25 @@ export default class GameMain extends React.Component<
     this.props.actions.setSnack(currentSnake);
   }
   getNext = (node: {x: number, y: number}, direction) => {
-    const { column } = this.props;
+    const { column, game } = this.props;
     let x = node.x + deX[direction];
     let y = node.y + deY[direction];
+    if (game.get('modal') === 1) {
+      return { x, y };
+    }
     if (x >= column) { x = 0; }
     if (y >= Row) { y = 0; }
     if (x < 0) { x = column - 1; }
     if (y < 0) { y = Row - 1; }
-    return {x, y};
+    return { x, y };
   }
   setFoodShowOrHide = () => {
     this.setState({ showFood: !this.state.showFood});
   }
-  keyDown = (event: any) => {
-    let direction = this.props.direction.get('snake');
-    const code = event.nativeEvent.keyCode;
-    if (code === 38 && this.props.game.get('init') === 0) {
-      this.props.actions.setGameInit(1);
-      this.props.actions.clearCode();
-      this.setState({ start: [{x: this.props.column - 1, y: 0, de: 0, pm: 1, index: 1}] });
-      this.startGame();
-    } else if (code === 38 && direction !== 1) {
-      direction = 0;
-    } else if (code === 40 && direction !== 0) {
-      direction = 1;
-    } else if (code === 37 && direction !== 3) {
-      direction = 2;
-    } else if (code === 39 && direction !== 2) {
-      direction = 3;
-    }
-    this.props.actions.setSnackDirection(direction);
-  }
-  getNewXY = (start) => {
+  getNewStartXY = (start) => {
     const column = this.props.column;
-    let next: {x?: number, y?: number, de?: number, pm?: number, index?: number} = {};
-    const {x, y, de, pm, index} = start;
+    let next: IStartNode = {};
+    const { x, y, de, pm, index } = start;
     next.x = de === 1 ? x + pm : x;
     next.y = de === 0 ? y + pm : y;
     next.de = de;
@@ -151,51 +151,80 @@ export default class GameMain extends React.Component<
     if (next.y === next.index - 1 && next.x === next.index - 1) {
       next.pm = 1;
     }
-
     if (next.x ===  Math.floor(Row / 2) && next.y === Math.floor(Row / 2)) {
       this.props.actions.setGameInit(0);
       if (this.startTimer) { clearInterval(this.startTimer); };
     }
     return next;
   }
-  renderStart = () => {
+  renderInit = () => {
     let start = this.state.start;
     const length = start.length;
-    const nextXY = this.getNewXY(start[length - 1]);
+    // 计算开始动画的下一个节点
+    const nextXY = this.getNewStartXY(start[length - 1]);
     start.push(nextXY);
     this.setState({start: start});
   }
   componentDidMount() {
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
-    this.startTimer = setInterval(this.renderStart, 10);
+    // 播放开始动画
+    this.startTimer = setInterval(this.renderInit, 10);
+  }
+  componentWillReceiveProps(nextProps: IGameMainProps) {
+    if (nextProps.game.get('start') && !this.props.game.get('start')) {
+      this.setState({ start: [{x: this.props.column - 1, y: 0, de: 0, pm: 1, index: 1}] });
+      this.startGame();
+    }
+    if (!nextProps.game.get('start') && this.props.game.get('start')) {
+      clearInterval(this.timer);
+      clearInterval(this.foodTimer);
+    }
+    if (nextProps.game.get('pause') && !this.props.game.get('pause')) {
+      clearInterval(this.timer);
+      clearInterval(this.foodTimer);
+    }
+    if (!nextProps.game.get('pause') && this.props.game.get('pause')) {
+      this.startGame();
+    }
   }
   componentWillUnmount() {
-    clearTimeout(this.timer);
-    clearTimeout(this.foodTimer);
-    clearTimeout(this.startTimer);
+    clearInterval(this.timer);
+    clearInterval(this.foodTimer);
+    clearInterval(this.startTimer);
   }
   render() {
     const { column, snake, food, game } = this.props;
     const { showFood, start } = this.state;
+    const gameInit = game.get('init');
+    const gameModal = game.get('modal');
     return (
-      <div className='left' onKeyDown={this.keyDown} tabIndex={0}>
-        {game.get('init') === 0 && <Logo />}
+      <div className='left'>
         {
+          /*logo*/
+          (gameInit === 0 || gameInit === -2) && <Logo />
+        }
+        {
+          /*背景*/
           [].fill.call(new Array(column), 0).map((item, i) => {
             return [].fill.call(new Array(Row), 0).map((item, j) => {
+              if (gameModal === 1 && (i === 0 || j === 0 || i === column - 1 || j === Row - 1)) {
+                return <div className='cell full-cell' key={i * Row + j}></div>;
+              }
               return <div className='cell' key={i * Row + j}></div>;
             });
           })
         }
         {
-          game.get('init') === 1 && snake.map((item, i) => {
+          /*蛇*/
+         gameInit === 1 && snake.map((item, i) => {
             return <div key={i} style={this.getSnakePosition(item.toJS())} className='cell snake-cell'></div>;
           })
         }
-        { game.get('init') === 1 &&  <div style={this.getSnakePosition(food.toJS())} className={`cell ${showFood ? 'food-o-cell' : 'food-cell'}`}></div>}
+        { /*食物*/gameInit === 1 &&  <div style={this.getSnakePosition(food.toJS())} className={`cell ${showFood ? 'food-o-cell' : 'food-cell'}`}></div>}
         {
-          game.get('init') === -1 && start.map((item, i) => {
+          /*初始化和失败条件下页面动画*/
+          gameInit === -1 && start.map((item, i) => {
             return <div key={i} style={this.getSnakePosition(item)} className='cell snake-cell'></div>;
           })
         }
