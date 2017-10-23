@@ -5,6 +5,7 @@ import { ExceptHeight, Row, deX, deY } from '../../constants';
 import Logo from '../Logo';
 import * as WindowActions from '../../actions/window';
 import * as GameActions from '../../actions/game';
+import { MaxColumn, MinColumn } from '../../constants';
 import './style.less';
 
 interface IGameMainProps {
@@ -66,7 +67,9 @@ export default class GameMain extends React.Component<
     const windowHeight = window.innerHeight;
     const gameHeight = windowHeight - ExceptHeight;
     const column = Math.floor(gameHeight / Row);
-    this.props.actions.resetColumn(column);
+    const cnt = column < MinColumn ? MinColumn : (column > MaxColumn ? MaxColumn : column);
+    this.setState({start: [{x: cnt - 1, y: 0, de: 0, pm: 1, index: 1}]});
+    this.props.actions.resetColumn(cnt);
   }
   getSnakePosition = ({x, y}: IStartNode) => {
     return { transform: `translate(${y * 15 + y}px, ${x * 15 + x}px)` };
