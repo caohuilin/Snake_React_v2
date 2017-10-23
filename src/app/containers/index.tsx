@@ -47,13 +47,8 @@ class App extends React.Component<IAppProps, IAppState> {
     const init = this.props.game.get('init');
     if (code === 1) {
       this.props.actions.setVolume();
-    } else if (code === 0) {
-      this.props.actions.endGame();
-      this.props.actions.setGameInit(-1);
-      this.props.actions.initSnack();
-      setTimeout(this.handleKeyDown.bind(null, 2), 0);
     } else if (init === 0) {// 初始化完毕
-      if (code === 2 ) {// 开始游戏
+      if (code === 2 || code === 0 ) {// 开始游戏
         this.props.actions.setGameInit(1);
         this.props.actions.clearCode();
         this.props.actions.startGame();
@@ -77,6 +72,11 @@ class App extends React.Component<IAppProps, IAppState> {
       } else if (code === 2) {
         this.props.actions.pauseGame({pause: false});
         this.props.actions.startGame();
+      } else if (code === 0) {
+        this.props.actions.endGame();
+        this.props.actions.setGameInit(-1);
+        this.props.actions.initSnack();
+        setTimeout(this.handleKeyDown.bind(null, 2), 0);
       }
       this.props.actions.setSnackDirection(direction);
     } else if (init === -2) {// 设置游戏模式
@@ -89,7 +89,7 @@ class App extends React.Component<IAppProps, IAppState> {
     } else if (init === -1 && code === 2) {// 初始化中
       setTimeout(this.handleKeyDown.bind(null, 2), 0);
     }
-    setTimeout(this.resetHandle, 500);
+    setTimeout(this.resetHandle, 250);
   }
   resetHandle = () => {
     this.handling = false;
