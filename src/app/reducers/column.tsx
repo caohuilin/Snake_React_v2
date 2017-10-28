@@ -1,8 +1,8 @@
 import { handleActions } from 'redux-actions';
 import * as Immutable from 'immutable';
-import { Column } from '../constants';
+import { MaxColumn, MinColumn } from '../constants';
 const IColumnRecord = Immutable.Record({
-  cnt: Column
+  cnt: MinColumn
 });
 
 export class IColumn extends IColumnRecord {
@@ -13,7 +13,7 @@ const initialState = new (IColumn);
 
 export default handleActions({
   'reset column'(state: IColumn, action: any) {
-    const cnt = action.payload < Column ? Column : action.payload;
+    const cnt = action.payload < MinColumn ? MinColumn : (action.payload > MaxColumn ? MaxColumn : action.payload);
     return state.set('cnt', cnt);
   }
 }, initialState);

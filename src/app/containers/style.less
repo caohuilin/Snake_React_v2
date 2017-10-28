@@ -52,7 +52,6 @@
   .layout {
     margin: 0 auto;
     display: block;
-    min-height: 100vh;
     background: #A2C64B;
     width: 450px;
     box-shadow: inset 0 0 10px #A7CC4D;
@@ -85,9 +84,9 @@
           border: solid 1px #000;
           display: flex;
           flex-direction: column;
+          justify-content: space-around;
           padding: 10px 5px;
           .record, .level {
-            margin-bottom: 30px;
             img {
               display: block;
               margin-top: 10px;
@@ -97,7 +96,6 @@
             }
           }
           .time {
-            margin-top: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;

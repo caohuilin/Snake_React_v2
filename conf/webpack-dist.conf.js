@@ -7,7 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const pkg = require('../package.json');
 const autoprefixer = require('autoprefixer');
-const publicpath = '/';
+const publicpath = './';
 module.exports = {
   module: {
     loaders: [
