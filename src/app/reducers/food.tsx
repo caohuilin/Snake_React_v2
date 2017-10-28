@@ -13,7 +13,15 @@ setTimeout(() => {
 });
 const index = modal === 1 ? 3 : 1;
 const x =  Math.floor(Math.random() * (column - index)) + 1;
+
 const y =  Math.floor(Math.random() * (Row - index)) + 1;
+if (modal === 0) {
+  console.assert(x >= 0 && x < column, `bad assert modal:${modal}, x:${x}`);
+  console.assert(y >= 0 && y < Row, `bad assert modal:${modal}, x:${y}`);
+} else {
+  console.assert(modal === 1 && x >= 1 && x < column - 1, `bad assert modal:${modal}, x:${x}`);
+  console.assert(modal === 1 && y >= 1 && y < Row - 1, `bad assert modal:${modal}, x:${y}`);
+}
 const IFoodRecord = Immutable.Record({
   food: Immutable.fromJS(
     {

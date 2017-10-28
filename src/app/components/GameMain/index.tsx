@@ -70,6 +70,8 @@ export default class GameMain extends React.Component<
     const cnt = column < MinColumn ? MinColumn : (column > MaxColumn ? MaxColumn : column);
     this.setState({start: [{x: cnt - 1, y: 0, de: 0, pm: 1, index: 1}]});
     this.props.actions.resetColumn(cnt);
+    this.props.actions.setFood();
+    this.props.actions.initSnack();
   }
   getSnakePosition = ({x, y}: IStartNode) => {
     return { transform: `translate(${y * 15 + y}px, ${x * 15 + x}px)` };
@@ -193,6 +195,12 @@ export default class GameMain extends React.Component<
     }
     if (!nextProps.game.get('pause') && this.props.game.get('pause')) {
       this.startGame();
+    }
+    if (nextProps.game.get('init') === -1 && this.props.game.get('init') !== -1) {
+      if (this.startTimer) {
+        clearInterval(this.startTimer);
+      }
+      this.startTimer = setInterval(this.renderInit, 10);
     }
   }
   componentWillUnmount() {
