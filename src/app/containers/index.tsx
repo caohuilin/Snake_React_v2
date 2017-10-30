@@ -72,7 +72,7 @@ class App extends React.Component<IAppProps, IAppState> {
       } else if (code === 2) {
         this.props.actions.pauseGame({pause: false});
         this.props.actions.startGame();
-      } else if (code === 0) {
+      } else if (code === 0 && !this.props.game.get('pause')) {
         this.props.actions.endGame();
         this.props.actions.setGameInit(-1);
         this.props.actions.initSnack();
