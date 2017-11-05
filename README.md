@@ -1,4 +1,5 @@
 # 贪吃蛇小游戏（第二版）
+![home](https://raw.githubusercontent.com/caohuilin/Snake_React_v2/develop/title.jpg)
 
 一年半前层用react写过贪吃蛇小游戏（https://github.com/caohuilin/Snake_React）
 那时刚刚学习React的我兴奋的尝试了很久
@@ -210,6 +211,8 @@ setFoodShowOrHide = () => {
 ### 试玩
 
 https://caohuilin.github.io/Snake_React_v2/
+
+![game](https://raw.githubusercontent.com/caohuilin/Snake_React_v2/develop/game.png)
 
 ### 补充
 
