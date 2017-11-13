@@ -199,14 +199,9 @@ export default class GameMain extends React.Component<
   }
   componentWillReceiveProps(nextProps: IGameMainProps) {
     if (nextProps.game.get('start') && !this.props.game.get('start')) {
-      // if (nextProps.game.get('modal') === 1) {
-      //   this.setState({ start: [{x: column - 1, y: 1, de: 0, pm: 1, index: 2}] });
-      // } else {
-      //  this.setState({ start: [{x: column, y: 0, de: 0, pm: 1, index: 1}] });
-      // }
       this.startGame();
     }
-    if (nextProps.game.get('init') !== this.props.game.get('init')) {
+    if (nextProps.game.get('init') === 1 && nextProps.game.get('init') !== this.props.game.get('init')) {
       this.resetStart();
     }
     if (!nextProps.game.get('start') && this.props.game.get('start')) {
