@@ -20,8 +20,8 @@ const Appx = React.createClass({
     return (
       <Provider store={store}>
         <Router history={history}>
-          <Route path="/" component={App} />
-          <Route path="/Snake_React_v2" component={App} />
+          <Route path='/' component={App} />
+          <Route path='/Snake_React_v2' component={App} />
         </Router>
       </Provider>
     );
