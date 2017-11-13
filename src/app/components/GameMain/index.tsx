@@ -176,7 +176,6 @@ export default class GameMain extends React.Component<
   renderInit = () => {
     let start = this.state.start;
     const length = start.length;
-    console.log('length', length, start[length - 1]);
     // 计算开始动画的下一个节点
     const nextXY = this.getNewStartXY(start[length - 1]);
     start.push(nextXY);
