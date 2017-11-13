@@ -184,12 +184,12 @@ export default class GameMain extends React.Component<
   }
   resetStart = () => {
     const column = this.props.size.get('column');
-    this.state.start.length = 0;
     if (this.props.game.get('modal') === 1) {
       this.setState({ start: [{x: column - 1, y: 1, de: 0, pm: 1, index: 2}] });
     } else {
      this.setState({ start: [{x: column - 1, y: 0, de: 0, pm: 1, index: 1}] });
     }
+    this.forceUpdate();
   }
   componentDidMount() {
     this.handleResize();
