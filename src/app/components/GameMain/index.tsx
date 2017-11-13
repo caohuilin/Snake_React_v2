@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as _ from 'lodash';
 import { deX, deY } from '../../constants';
 import Logo from '../Logo';
 import * as WindowActions from '../../actions/window';
@@ -64,7 +65,7 @@ export default class GameMain extends React.Component<
       start: [{x: column - 1, y: 0, de: 0, pm: 1, index: 1}],
     };
   }
-  handleResize = () => {
+  resetSize = () => {
     const height = document.getElementById('left').clientHeight;
     const width = document.getElementById('left').clientWidth;
     const row = Math.floor((width - 15) / 16) + 1;
@@ -75,6 +76,10 @@ export default class GameMain extends React.Component<
       this.props.actions.setFood();
       this.props.actions.initSnack();
     }, 0);
+  }
+  handleResize = () => {
+    this.props.actions.resetSize({ column: 0, row: 0});
+    setTimeout(this.resetSize, 100);
   }
   getSnakePosition = ({x, y}: IStartNode) => {
     return { transform: `translate(${y * 16}px, ${x * 16}px)` };
@@ -192,8 +197,9 @@ export default class GameMain extends React.Component<
     this.forceUpdate();
   }
   componentDidMount() {
-    this.handleResize();
-    window.addEventListener('resize', this.handleResize);
+    this.resetSize();
+    var throttled = _.throttle(this.handleResize, 1000, { 'trailing': false });
+    window.addEventListener('resize', throttled);
     // 播放开始动画
     this.startTimer = setInterval(this.renderInit, 10);
   }
