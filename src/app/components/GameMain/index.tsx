@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { ExceptHeight, deX, deY } from '../../constants';
+import { deX, deY } from '../../constants';
 import Logo from '../Logo';
 import * as WindowActions from '../../actions/window';
 import * as GameActions from '../../actions/game';
+import { IGame, ISize, ISnake, IDirection, IFood } from '../../type/ReducerType';
 import './style.less';
 
 interface IGameMainProps {
   actions?: any;
-  size?: any;
-  snake?: any;
-  food?: any;
-  direction?: any;
-  game?: any;
+  size?: ISize;
+  snake?: ISnake;
+  food?: IFood;
+  direction?: IDirection;
+  game?: IGame;
 }
 
 interface IGameMainState {

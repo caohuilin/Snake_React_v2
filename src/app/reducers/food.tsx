@@ -23,7 +23,10 @@ const IFoodRecord = Immutable.Record({
 });
 
 export class IFood extends IFoodRecord {
-  food: any;
+  food: {
+    x: number;
+    y: number;
+  };
 }
 
 const initialState = new (IFood);

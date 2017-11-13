@@ -29,7 +29,10 @@ const ISnakeRecord = Immutable.Record({
 });
 
 export class ISnake extends ISnakeRecord {
-  snake: any;
+  snake: {
+    x: number,
+    y: number
+  }[];
 }
 
 const initialState = new (ISnake);

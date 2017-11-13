@@ -8,12 +8,13 @@ import ScreenInfo from '../components/ScreenInfo';
 import GameMain from '../components/GameMain';
 
 import * as GameActions from '../actions/game';
+import { IDirection, IGame } from '../type/ReducerType';
 import './style.less';
 
 interface IAppProps {
   actions: any;
-  direction: any;
-  game: any;
+  direction: IDirection;
+  game: IGame;
 }
 interface IAppState {
 }

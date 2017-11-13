@@ -16,8 +16,6 @@ COMMON_MODULES['redux'] = require('redux')
 COMMON_MODULES['strip-ansi'] = require('strip-ansi')
 COMMON_MODULES['react-dom/lib/ReactMount'] = require('react-dom/lib/ReactMount')
 COMMON_MODULES['react-router-redux'] = require('react-router-redux')
-COMMON_MODULES['redux-saga'] = require('redux-saga')
-COMMON_MODULES['redux-saga/effects'] = require('redux-saga/effects')
 
 COMMON_MODULES.require = function (module) {
   if (COMMON_MODULES.hasOwnProperty(module)) {
