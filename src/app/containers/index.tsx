@@ -14,7 +14,6 @@ interface IAppProps {
   actions: any;
   direction: any;
   game: any;
-  column: any;
 }
 interface IAppState {
 }
@@ -23,7 +22,6 @@ interface IAppState {
   state => ({
     direction: state.direction,
     game: state.game,
-    column: state.column.get('column')
   }),
   dispatch => ({
     actions: bindActionCreators(
@@ -102,12 +100,14 @@ class App extends React.Component<IAppProps, IAppState> {
     return (
       <div className='app' onKeyDown={this.keyDown} tabIndex={0}>
         <div className='layout'>
-          <Header />
-          <div className='content'>
-            <div className='main'>
-              <div className='screen'>
-                <GameMain />
-                <ScreenInfo />
+          <div className='layout-top'>
+            <Header />
+            <div className='content'>
+              <div className='main'>
+                <div className='screen'>
+                  <GameMain />
+                  <ScreenInfo />
+                </div>
               </div>
             </div>
           </div>

@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { ExceptHeight, Row, deX, deY } from '../../constants';
+import { ExceptHeight, deX, deY } from '../../constants';
 import Logo from '../Logo';
 import * as WindowActions from '../../actions/window';
 import * as GameActions from '../../actions/game';
-import { MaxColumn, MinColumn } from '../../constants';
 import './style.less';
 
 interface IGameMainProps {
   actions?: any;
-  column?: number;
+  size?: any;
   snake?: any;
   food?: any;
   direction?: any;
@@ -32,7 +31,7 @@ interface IStartNode {
 
 @connect(
   state => ({
-    column: state.column.get('cnt'),
+    size: state.size,
     snake: state.snake.get('snake'),
     food: state.food.get('food'),
     direction: state.direction,
@@ -58,23 +57,26 @@ export default class GameMain extends React.Component<
   startTimer = null;
   constructor(props: IGameMainProps) {
     super(props);
+    const column = props.size.get('column');
     this.state = {
       showFood: true,
-      start: [{x: this.props.column - 1, y: 0, de: 0, pm: 1, index: 1}],
+      start: [{x: column - 1, y: 0, de: 0, pm: 1, index: 1}],
     };
   }
   handleResize = () => {
-    const windowHeight = window.innerHeight;
-    const gameHeight = windowHeight - ExceptHeight;
-    const column = Math.floor(gameHeight / Row);
-    const cnt = column < MinColumn ? MinColumn : (column > MaxColumn ? MaxColumn : column);
-    this.setState({start: [{x: cnt - 1, y: 0, de: 0, pm: 1, index: 1}]});
-    this.props.actions.resetColumn(cnt);
-    this.props.actions.setFood();
-    this.props.actions.initSnack();
+    const height = document.getElementById('left').clientHeight;
+    const width = document.getElementById('left').clientWidth;
+    const row = Math.floor((width - 15) / 16) + 1;
+    const column = Math.floor((height - 15) / 16) + 2;
+    this.setState({start: [{x: column - 1, y: 0, de: 0, pm: 1, index: 1}]});
+    this.props.actions.resetSize({ column: column, row: row });
+    setTimeout(() => {
+      this.props.actions.setFood();
+      this.props.actions.initSnack();
+    }, 0);
   }
   getSnakePosition = ({x, y}: IStartNode) => {
-    return { transform: `translate(${y * 15 + y}px, ${x * 15 + x}px)` };
+    return { transform: `translate(${y * 16}px, ${x * 16}px)` };
   }
   startGame = () => {
     if (this.timer ) { clearInterval(this.timer); }
@@ -83,12 +85,17 @@ export default class GameMain extends React.Component<
     this.foodTimer = setInterval(this.setFoodShowOrHide, 200);
   }
   isDead({x, y}: {x: number, y: number}) {
-    const { game, column } = this.props;
-    if (game.get('modal') === 1 && (x === 0 || y === 0 || x === column || y === Row) ) {
+    const { game, size } = this.props;
+    const column = size.get('column');
+    const row = size.get('row');
+    if (game.get('modal') === 1 && (x === 0 || y === 0 || x === column || y === row) ) {
       return true;
     }
     const snake = this.props.snake.toJS();
     return snake.filter(item => item.x === x && item.y === y).length !== 0;
+  }
+  isInSnake({x, y}: {x: number, y: number}) {
+    return this.state.start.filter(item => item.x === x && item.y === y).length !== 0;
   }
   dead = () => {
     this.props.actions.endGame();
@@ -117,23 +124,27 @@ export default class GameMain extends React.Component<
     this.props.actions.setSnack(currentSnake);
   }
   getNext = (node: {x: number, y: number}, direction) => {
-    const { column, game } = this.props;
+    const { size, game } = this.props;
+    const column = size.get('column');
+    const row = size.get('row');
     let x = node.x + deX[direction];
     let y = node.y + deY[direction];
     if (game.get('modal') === 1) {
       return { x, y };
     }
     if (x >= column) { x = 0; }
-    if (y >= Row) { y = 0; }
+    if (y >= row) { y = 0; }
     if (x < 0) { x = column - 1; }
-    if (y < 0) { y = Row - 1; }
+    if (y < 0) { y = row - 1; }
     return { x, y };
   }
   setFoodShowOrHide = () => {
     this.setState({ showFood: !this.state.showFood});
   }
   getNewStartXY = (start) => {
-    const column = this.props.column;
+    const size = this.props.size;
+    const column = size.get('column');
+    const row = size.get('row');
     let next: IStartNode = {};
     const { x, y, de, pm, index } = start;
     next.x = de === 1 ? x + pm : x;
@@ -141,22 +152,22 @@ export default class GameMain extends React.Component<
     next.de = de;
     next.pm = pm;
     next.index = index;
-    if (next.x === column - index - 1 && next.y === index - 1 && next.x !== Math.floor(column / 2) && next.y !== Math.floor(Row / 2)) {
+    if (next.x === column - index - 1 && next.y === index - 1 && next.x !== Math.floor(column / 2) && next.y !== Math.floor(row / 2)) {
       next.index += 1;
     }
-    if (de === 0 && (next.y === Row - next.index || (next.y === next.index - 1 && next.x === index - 1))) {
+    if (de === 0 && (next.y === row - next.index || (next.y === next.index - 1 && next.x === index - 1))) {
       next.de = 1;
     }
     if (de === 1 && (next.x === column - next.index || next.x === next.index - 1)) {
       next.de = 0;
     }
-    if (next.y === Row - next.index && next.x === column - next.index) {
+    if (next.y === row - next.index && next.x === column - next.index) {
       next.pm = -1;
     }
     if (next.y === next.index - 1 && next.x === next.index - 1) {
       next.pm = 1;
     }
-    if (next.x ===  Math.floor(Row / 2) && next.y === Math.floor(Row / 2)) {
+    if (this.isInSnake({x: next.x, y: next.y}) && this.props.game.get('init') === -1) {
       this.props.actions.setGameInit(0);
       if (this.startTimer) { clearInterval(this.startTimer); };
     }
@@ -165,10 +176,20 @@ export default class GameMain extends React.Component<
   renderInit = () => {
     let start = this.state.start;
     const length = start.length;
+    console.log('length', length, start[length - 1]);
     // 计算开始动画的下一个节点
     const nextXY = this.getNewStartXY(start[length - 1]);
     start.push(nextXY);
-    this.setState({start: start});
+    this.setState({ start });
+  }
+  resetStart = () => {
+    const column = this.props.size.get('column');
+    this.state.start.length = 0;
+    if (this.props.game.get('modal') === 1) {
+      this.setState({ start: [{x: column - 1, y: 1, de: 0, pm: 1, index: 2}] });
+    } else {
+     this.setState({ start: [{x: column - 1, y: 0, de: 0, pm: 1, index: 1}] });
+    }
   }
   componentDidMount() {
     this.handleResize();
@@ -178,12 +199,15 @@ export default class GameMain extends React.Component<
   }
   componentWillReceiveProps(nextProps: IGameMainProps) {
     if (nextProps.game.get('start') && !this.props.game.get('start')) {
-      if (nextProps.game.get('modal') === 1) {
-        this.setState({ start: [{x: this.props.column - 2, y: 1, de: 0, pm: 1, index: 2}] });
-      } else {
-       this.setState({ start: [{x: this.props.column - 1, y: 0, de: 0, pm: 1, index: 1}] });
-      }
+      // if (nextProps.game.get('modal') === 1) {
+      //   this.setState({ start: [{x: column - 1, y: 1, de: 0, pm: 1, index: 2}] });
+      // } else {
+      //  this.setState({ start: [{x: column, y: 0, de: 0, pm: 1, index: 1}] });
+      // }
       this.startGame();
+    }
+    if (nextProps.game.get('init') !== this.props.game.get('init')) {
+      this.resetStart();
     }
     if (!nextProps.game.get('start') && this.props.game.get('start')) {
       clearInterval(this.timer);
@@ -209,12 +233,14 @@ export default class GameMain extends React.Component<
     clearInterval(this.startTimer);
   }
   render() {
-    const { column, snake, food, game } = this.props;
+    const { size, snake, food, game } = this.props;
     const { showFood, start } = this.state;
     const gameInit = game.get('init');
     const gameModal = game.get('modal');
+    const column = size.get('column');
+    const row = size.get('row');
     return (
-      <div className='left'>
+      <div className='left' id='left'>
         {
           /*logo*/
           (gameInit === 0 || gameInit === -2) && <Logo />
@@ -222,11 +248,11 @@ export default class GameMain extends React.Component<
         {
           /*背景*/
           [].fill.call(new Array(column), 0).map((item, i) => {
-            return [].fill.call(new Array(Row), 0).map((item, j) => {
-              if (gameModal === 1 && (i === 0 || j === 0 || i === column - 1 || j === Row - 1)) {
-                return <div className='cell full-cell' key={i * Row + j}></div>;
+            return [].fill.call(new Array(row), 0).map((item, j) => {
+              if (gameModal === 1 && (i === 0 || j === 0 || i === column - 1 || j === row - 1)) {
+                return <div className='cell full-cell' key={i * row + j}></div>;
               }
-              return <div className='cell' key={i * Row + j}></div>;
+              return <div className='cell' key={i * row + j}></div>;
             });
           })
         }

@@ -1,6 +1,6 @@
 import { routerReducer as routing } from 'react-router-redux';
 import { combineReducers } from 'redux';
-import column from './column';
+import size from './size';
 import snake from './snake';
 import direction from './direction';
 import food from './food';
@@ -8,7 +8,7 @@ import game from './game';
 
 const rootReducer = combineReducers({
   routing,
-  column,
+  size,
   snake,
   direction,
   food,

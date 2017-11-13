@@ -51,16 +51,23 @@
   }
   .layout {
     margin: 0 auto;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background: #A2C64B;
-    width: 450px;
     box-shadow: inset 0 0 10px #A7CC4D;
     border-radius: 20px;
+    height: 100vh;
+    width: 440px;
+    .layout-top {
+      flex: 1;
+    }
     .content {
       margin: 0 30px;
       padding: 20px;
       border: solid 5px #000;
       border-top: 0;
+      height: calc(~"100% - 50px");;
       .main {
         height: 100%;
         border: 5px solid;
