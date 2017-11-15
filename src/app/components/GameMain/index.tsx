@@ -107,7 +107,6 @@ export default class GameMain extends React.Component<
     this.props.actions.endGame();
     this.props.actions.setGameInit(-1);
     this.props.actions.initSnack();
-    this.startTimer = setInterval(this.renderInit, 10);
   }
   goNext = () => {
     const { snake, direction, food } = this.props;
@@ -201,6 +200,7 @@ export default class GameMain extends React.Component<
     var throttled = _.throttle(this.handleResize, 1000, { 'trailing': false });
     window.addEventListener('resize', throttled);
     // 播放开始动画
+    if (this.startTimer) { clearInterval(this.startTimer); }
     this.startTimer = setInterval(this.renderInit, 10);
   }
   componentWillReceiveProps(nextProps: IGameMainProps) {
