@@ -13,17 +13,14 @@ setTimeout(() => {
   row = size.row;
   modal = getModal(getStore().getState());
 });
-const index = modal === 1 ? 3 : 1;
-const x = Math.floor(Math.random() * (column - index)) + 1;
-const y = Math.floor(Math.random() * (row - index)) + 1;
 const ISnakeRecord = Immutable.Record({
   snake: Immutable.fromJS([
     {
-      x: x,
-      y: y
+      x: 0,
+      y: 1 + modal
     }, {
-      x: x,
-      y: y
+      x: 0,
+      y: 0 + modal
     }
   ])
 });
@@ -43,7 +40,7 @@ export default handleActions({
     const index = modal === 1 ? 3 : 1;
     const x = Math.floor(Math.random() * (column - index)) + 1;
     const y = Math.floor(Math.random() * (row - index)) + 1;
-    if (y === 0) { return state; }
+    if (y === 1 + modal) { return state; }
     return state.set('snake', Immutable.fromJS([
       {
         x: x,
