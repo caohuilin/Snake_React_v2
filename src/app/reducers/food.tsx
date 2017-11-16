@@ -29,35 +29,27 @@ export class IFood extends IFoodRecord {
 
 const initialState = new IFood();
 
+const setFood = (state) => {
+  const modal = getModal(getStore().getState());
+  const index = modal === 1 ? 3 : 1;
+  const x = Math.floor(Math.random() * (column - index)) + 1;
+  const y = Math.floor(Math.random() * (row - index)) + 1;
+  if (y === modal) {
+    return state;
+  }
+  const food = {
+    x: x,
+    y: y
+  };
+  return state.set('food', Immutable.fromJS(food));
+}
 export default handleActions(
   {
     'set food'(state: IFood = initialState) {
-      const modal = getModal(getStore().getState());
-      const index = modal === 1 ? 3 : 1;
-      const x = Math.floor(Math.random() * (column - index)) + 1;
-      const y = Math.floor(Math.random() * (row - index)) + 1;
-      if (y === modal) {
-        return state;
-      }
-      const food = {
-        x: x,
-        y: y
-      };
-      return state.set('food', Immutable.fromJS(food));
+      return setFood(state);
     },
     'set modal'(state: IFood = initialState) {
-      const modal = getModal(getStore().getState());
-      const index = modal === 1 ? 3 : 1;
-      const x = Math.floor(Math.random() * (column - index)) + 1;
-      const y = Math.floor(Math.random() * (row - index)) + 1;
-      if (y === modal) {
-        return state;
-      }
-      const food = {
-        x: x,
-        y: y
-      };
-      return state.set('food', Immutable.fromJS(food));
+      return setFood(state);
     }
   },
   initialState
