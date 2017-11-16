@@ -1,8 +1,7 @@
 import * as React from 'react';
 import './style.less';
 
-interface ILogoProps {
-}
+interface ILogoProps {}
 
 interface ILogoState {
   display?: string;
@@ -15,7 +14,7 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
     super();
     this.state = {
       style: 'r1',
-      display: 'none',
+      display: 'none'
     };
   }
   componentWillMount() {
@@ -25,7 +24,7 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
     clearTimeout(this.timeout);
     this.setState({
       style: 'r1',
-      display: 'none',
+      display: 'none'
     });
 
     let m = 'r'; // 方向
@@ -38,10 +37,11 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
       this.timeout = setTimeout(func, delay);
     };
 
-    const show = (func) => { // 显示
+    const show = func => {
+      // 显示
       set(() => {
         this.setState({
-          display: 'block',
+          display: 'block'
         });
         if (func) {
           func();
@@ -49,10 +49,11 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
       }, 150);
     };
 
-    const hide = (func) => { // 隐藏
+    const hide = func => {
+      // 隐藏
       set(() => {
         this.setState({
-          display: 'none',
+          display: 'none'
         });
         if (func) {
           func();
@@ -60,7 +61,8 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
       }, 150);
     };
 
-    const eyes = (func, delay1, delay2) => { // 龙在眨眼睛
+    const eyes = (func, delay1, delay2) => {
+      // 龙在眨眼睛
       set(() => {
         this.setState({ style: m + 2 });
         set(() => {
@@ -72,7 +74,8 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
       }, delay1);
     };
 
-    const run = (func) => { // 开始跑步啦！
+    const run = func => {
+      // 开始跑步啦！
       set(() => {
         this.setState({ style: m + 4 });
         set(() => {
@@ -95,17 +98,30 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
 
     const dra = () => {
       count = 0;
-      eyes(() => {
-        eyes(() => {
-          eyes(() => {
-            this.setState({ style: m + 2 });
-            run(dra);
-          }, 150, 150);
-        }, 150, 150);
-      }, 1000, 1500);
+      eyes(
+        () => {
+          eyes(
+            () => {
+              eyes(
+                () => {
+                  this.setState({ style: m + 2 });
+                  run(dra);
+                },
+                150,
+                150
+              );
+            },
+            150,
+            150
+          );
+        },
+        1000,
+        1500
+      );
     };
 
-    show(() => { // 忽隐忽现
+    show(() => {
+      // 忽隐忽现
       hide(() => {
         show(() => {
           hide(() => {
@@ -116,7 +132,7 @@ export default class Logo extends React.Component<ILogoProps, ILogoState> {
         });
       });
     });
-  }
+  };
   componentWillUnmount() {
     clearTimeout(this.timeout);
   }

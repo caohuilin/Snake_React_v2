@@ -12,18 +12,19 @@ interface INumberState {
   time: Date;
 }
 
-const formate = (num) => (
-  num < 10 ? `0${num}`.split('') : `${num}`.split('')
-);
+const formate = num => (num < 10 ? `0${num}`.split('') : `${num}`.split(''));
 
-export default class Number extends React.Component<INumberProps, INumberState> {
+export default class Number extends React.Component<
+  INumberProps,
+  INumberState
+> {
   timeInterval = null;
   time_count = null;
   constructor() {
     super();
     this.state = {
       time_count: false,
-      time: new Date(),
+      time: new Date()
     };
   }
   componentWillMount() {
@@ -35,7 +36,7 @@ export default class Number extends React.Component<INumberProps, INumberState> 
       this.timeInterval = setTimeout(() => {
         this.setState({
           time: new Date(),
-          time_count: count,
+          time_count: count
         });
         clock();
       }, 1000);
@@ -69,12 +70,8 @@ export default class Number extends React.Component<INumberProps, INumberState> 
       const t = hour.concat(sec ? 'd' : 'd_c', min);
       return (
         <div className='number'>
-        {
-          t.map((e, k) => (
-            <span className={`bg s_${e}`} key={k} />
-          ))
-        }
-      </div>
+          {t.map((e, k) => <span className={`bg s_${e}`} key={k} />)}
+        </div>
       );
     }
 
@@ -85,11 +82,7 @@ export default class Number extends React.Component<INumberProps, INumberState> 
     }
     return (
       <div className='number'>
-        {
-          num.map((e, k) => (
-            <span className={`bg s_${e}`} key={k} />
-          ))
-        }
+        {num.map((e, k) => <span className={`bg s_${e}`} key={k} />)}
       </div>
     );
   }

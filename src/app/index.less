@@ -13,24 +13,29 @@ body,
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-      opacity:  0.5;
+     ::-webkit-input-placeholder {
+        /* WebKit, Blink, Edge */
+        opacity: 0.5;
     }
-    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-      opacity:  0.5;
+     :-moz-placeholder {
+        /* Mozilla Firefox 4 to 18 */
+        opacity: 0.5;
     }
-    ::-moz-placeholder { /* Mozilla Firefox 19+ */
-      opacity:  0.5;
+     ::-moz-placeholder {
+        /* Mozilla Firefox 19+ */
+        opacity: 0.5;
     }
-    :-ms-input-placeholder { /* Internet Explorer 10-11 */
-      opacity:  0.5;
+     :-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        opacity: 0.5;
     }
     outline: 0;
-    &:focus{
-      outline: 0;
-      outline-offset:0;
+    &:focus {
+        outline: 0;
+        outline-offset: 0;
     }
 }
+
 body {
     background: @bgColor;
     font-family: @fontFamily;
@@ -38,13 +43,20 @@ body {
     height: 100%;
     font-size: 14px;
     position: relative;
-    &.modal-open{
-      .header{
-         padding-right: 15px;
-      }
+    &.modal-open {
+        .header {
+            padding-right: 15px;
+        }
     }
 }
-h1 { font-size: 2.4em; } /* =24px */
+
+h1 {
+    font-size: 2.4em;
+}
+
+
+/* =24px */
+
 a {
     text-decoration: none;
     &:hover {
@@ -52,32 +64,44 @@ a {
     }
 }
 
-input,button,a{
-   outline: 0;
+input,
+button,
+a {
+    outline: 0;
 }
-button,a,.btn{
-  &:hover,&:focus{
-    cursor: pointer;
+
+button,
+a,
+.btn {
+    &:hover,
+    &:focus {
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: none!important;
+    }
+}
+
+a,
+a:hover,
+a:focus {
     text-decoration: none;
-    box-shadow: none!important;
-  }
 }
-a, a:hover, a:focus{
-  text-decoration: none;
+
+button:focus {
+    outline: 0;
 }
-button:focus{
-  outline: 0;
-}
-ul,ol{
-  list-style: none;
-  padding: 0;
-  margin: 0;
+
+ul,
+ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 #root {
-  .home{
-    min-width: 1190px;
-  }
+    .home {
+        min-width: 1190px;
+    }
 }
 
 #footer {
@@ -85,16 +109,15 @@ ul,ol{
 }
 
 .badge {
-  line-height: inherit;
+    line-height: inherit;
 }
 
-
- .mask {
-     width: 100%;
-     height: 100%;
-     position: fixed;
-     background: rgba(0, 0, 0, 0.6);
-     z-index: 1051;
-     top: 0;
-     left: 0;
- }
+.mask {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1051;
+    top: 0;
+    left: 0;
+}

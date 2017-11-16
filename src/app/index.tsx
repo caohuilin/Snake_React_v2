@@ -6,19 +6,21 @@ import { AppContainer } from 'react-hot-loader';
 import './index.less';
 const root = document.getElementById('root');
 
-ReactDOM.render((
+ReactDOM.render(
   <AppContainer>
     <App />
-  </AppContainer>
-), root);
+  </AppContainer>,
+  root
+);
 declare var module: any;
 if (module.hot) {
   module.hot.accept('./router', () => {
     const App = require('./router').default;
-    ReactDOM.render((
+    ReactDOM.render(
       <AppContainer>
         <App />
-      </AppContainer>
-    ), root);
+      </AppContainer>,
+      root
+    );
   });
 }
