@@ -1,11 +1,9 @@
 import * as React from 'react';
 import './style.less';
 
-interface IHeaderProps {
-}
+interface IHeaderProps {}
 
-interface IHeaderState {
-}
+interface IHeaderState {}
 
 export default class Header extends React.Component<
   IHeaderProps,

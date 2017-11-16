@@ -11,14 +11,17 @@ export class ISize extends ISizeRecord {
   row: number;
 }
 
-const initialState = new (ISize);
+const initialState = new ISize();
 
-export default handleActions({
-  'reset size'(state: ISize, action: any) {
-    const { column, row} = action.payload;
-    return Immutable.fromJS({
-      column: column,
-      row: row
-    });
-  }
-}, initialState);
+export default handleActions(
+  {
+    'reset size'(state: ISize, action: any) {
+      const { column, row } = action.payload;
+      return Immutable.fromJS({
+        column: column,
+        row: row
+      });
+    }
+  },
+  initialState
+);

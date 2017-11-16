@@ -14,12 +14,10 @@ setTimeout(() => {
   modal = getModal(getStore().getState());
 });
 const IFoodRecord = Immutable.Record({
-  food: Immutable.fromJS(
-    {
-      x: 0,
-      y: modal
-    }
-  )
+  food: Immutable.fromJS({
+    x: 0,
+    y: modal
+  })
 });
 
 export class IFood extends IFoodRecord {
@@ -29,19 +27,24 @@ export class IFood extends IFoodRecord {
   };
 }
 
-const initialState = new (IFood);
+const initialState = new IFood();
 
-export default handleActions({
-  'set food'(state: IFood = initialState) {
-    const modal = getModal(getStore().getState());
-    const index = modal === 1 ? 3 : 1;
-    const x =  Math.floor(Math.random() * (column - index)) + 1;
-    const y =  Math.floor(Math.random() * (row - index)) + 1;
-    if (y === modal) { return state; }
-    const food = {
-      x: x,
-      y: y
-    };
-    return state.set('food', Immutable.fromJS(food));
-  }
-}, initialState);
+export default handleActions(
+  {
+    'set food'(state: IFood = initialState) {
+      const modal = getModal(getStore().getState());
+      const index = modal === 1 ? 3 : 1;
+      const x = Math.floor(Math.random() * (column - index)) + 1;
+      const y = Math.floor(Math.random() * (row - index)) + 1;
+      if (y === modal) {
+        return state;
+      }
+      const food = {
+        x: x,
+        y: y
+      };
+      return state.set('food', Immutable.fromJS(food));
+    }
+  },
+  initialState
+);

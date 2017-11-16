@@ -60,6 +60,7 @@ export default class GameMain extends React.Component<
   IGameMainState
 > {
   timer = null;
+  throttled = null;
   constructor(props: IGameMainProps) {
     super(props);
     const column = props.size.get('column');
@@ -91,7 +92,10 @@ export default class GameMain extends React.Component<
     const { game, size } = this.props;
     const column = size.get('column');
     const row = size.get('row');
-    if (game.get('modal') === 1 && (x === 0 || y === 0 || x === column - 1 || y === row - 1) ) {
+    if (
+      game.get('modal') === 1 &&
+      (x === 0 || y === 0 || x === column - 1 || y === row - 1)
+    ) {
       return true;
     }
     const snake = this.props.snake.toJS();
@@ -145,20 +149,28 @@ export default class GameMain extends React.Component<
     }
   };
   getNext = (node: { x: number; y: number }, direction) => {
-      const { size, game } = this.props;
-      const column = size.get('column');
-      const row = size.get('row');
-      let x = node.x + deX[direction];
-      let y = node.y + deY[direction];
-      if (game.get('modal') === 1) {
-        return { x, y };
-      }
-      if (x >= column) { x = 0; }
-      if (y >= row) { y = 0; }
-      if (x < 0) { x = column - 1; }
-      if (y < 0) { y = row - 1; }
+    const { size, game } = this.props;
+    const column = size.get('column');
+    const row = size.get('row');
+    let x = node.x + deX[direction];
+    let y = node.y + deY[direction];
+    if (game.get('modal') === 1) {
       return { x, y };
-  }
+    }
+    if (x >= column) {
+      x = 0;
+    }
+    if (y >= row) {
+      y = 0;
+    }
+    if (x < 0) {
+      x = column - 1;
+    }
+    if (y < 0) {
+      y = row - 1;
+    }
+    return { x, y };
+  };
   getNextDirection = () => {
     const direction = this.props.direction;
     const currentDirection = direction.get('current');
@@ -173,9 +185,9 @@ export default class GameMain extends React.Component<
       return 3;
     }
     return currentDirection;
-  }
+  };
   setFoodShowOrHide = () => {
-      this.setState({ showFood: !this.state.showFood});
+    this.setState({ showFood: !this.state.showFood });
   };
   getNewStartXY = start => {
     const size = this.props.size;
@@ -235,12 +247,11 @@ export default class GameMain extends React.Component<
       });
     }
     this.forceUpdate();
-    console.log('reset start', this.state.start);
   };
   componentDidMount() {
     this.resetSize();
-    var throttled = _.throttle(this.handleResize, 1000, { trailing: false });
-    window.addEventListener('resize', throttled);
+    this.throttled = _.throttle(this.handleResize, 1000, { trailing: false });
+    window.addEventListener('resize', this.throttled);
     if (this.timer) {
       clearInterval(this.timer);
     }
@@ -250,7 +261,10 @@ export default class GameMain extends React.Component<
     if (nextProps.game.get('time') !== this.props.game.get('time')) {
       this.goNext();
     }
-    if (nextProps.game.get('init') === 1 && nextProps.game.get('init') !== this.props.game.get('init')) {
+    if (
+      nextProps.game.get('init') === 1 &&
+      nextProps.game.get('init') !== this.props.game.get('init')
+    ) {
       this.resetStart();
     }
   }
@@ -258,6 +272,7 @@ export default class GameMain extends React.Component<
     if (this.timer) {
       clearInterval(this.timer);
     }
+    window.removeEventListener('resize', this.throttled);
   }
   render() {
     const { size, snake, food, game } = this.props;
@@ -293,9 +308,13 @@ export default class GameMain extends React.Component<
               />
             );
           })}
-        { /*食物*/
-          gameInit === 1 && <div style={this.getSnakePosition(food.toJS())} className={`cell ${showFood ? 'food-o-cell' : 'food-cell'}`}></div>
-        }
+        {/*食物*/
+        gameInit === 1 && (
+          <div
+            style={this.getSnakePosition(food.toJS())}
+            className={`cell ${showFood ? 'food-o-cell' : 'food-cell'}`}
+          />
+        )}
         {/*初始化和失败条件下页面动画*/
         gameInit === -1 &&
           start.map((item, i) => {

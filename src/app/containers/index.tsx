@@ -63,9 +63,9 @@ class App extends React.Component<IAppProps, IAppState> {
         } else if (code === 32) {
           this.props.actions.pauseGame();
         } else if (code === 4) {
-          this.props.actions.pauseGame({pause: true});
+          this.props.actions.pauseGame({ pause: true });
         } else if (code === 2) {
-          this.props.actions.pauseGame({pause: false});
+          this.props.actions.pauseGame({ pause: false });
         } else if (code === 0 && !this.props.game.get('pause')) {
           // 重新开始 code = 0
           this.props.actions.setGameInit(-1);
