@@ -17,7 +17,7 @@ const IFoodRecord = Immutable.Record({
   food: Immutable.fromJS(
     {
       x: 0,
-      y: 0
+      y: modal
     }
   )
 });
@@ -37,6 +37,7 @@ export default handleActions({
     const index = modal === 1 ? 3 : 1;
     const x =  Math.floor(Math.random() * (column - index)) + 1;
     const y =  Math.floor(Math.random() * (row - index)) + 1;
+    if (y === modal) { return state; }
     const food = {
       x: x,
       y: y

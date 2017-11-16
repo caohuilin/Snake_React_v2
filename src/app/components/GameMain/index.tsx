@@ -94,7 +94,7 @@ export default class GameMain extends React.Component<
     const { game, size } = this.props;
     const column = size.get('column');
     const row = size.get('row');
-    if (game.get('modal') === 1 && (x === 0 || y === 0 || x === column || y === row) ) {
+    if (game.get('modal') === 1 && (x === 0 || y === 0 || x === column - 1 || y === row - 1) ) {
       return true;
     }
     const snake = this.props.snake.toJS();
@@ -107,7 +107,6 @@ export default class GameMain extends React.Component<
     this.props.actions.endGame();
     this.props.actions.setGameInit(-1);
     this.props.actions.initSnack();
-    this.startTimer = setInterval(this.renderInit, 10);
   }
   goNext = () => {
     const { snake, direction, food } = this.props;
@@ -190,7 +189,7 @@ export default class GameMain extends React.Component<
   resetStart = () => {
     const column = this.props.size.get('column');
     if (this.props.game.get('modal') === 1) {
-      this.setState({ start: [{x: column - 1, y: 1, de: 0, pm: 1, index: 2}] });
+      this.setState({ start: [{x: column - 2, y: 1, de: 0, pm: 1, index: 2}] });
     } else {
      this.setState({ start: [{x: column - 1, y: 0, de: 0, pm: 1, index: 1}] });
     }
@@ -201,6 +200,7 @@ export default class GameMain extends React.Component<
     var throttled = _.throttle(this.handleResize, 1000, { 'trailing': false });
     window.addEventListener('resize', throttled);
     // 播放开始动画
+    if (this.startTimer) { clearInterval(this.startTimer); }
     this.startTimer = setInterval(this.renderInit, 10);
   }
   componentWillReceiveProps(nextProps: IGameMainProps) {

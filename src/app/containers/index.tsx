@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import * as _ from 'lodash';
 import Header from '../components/Header';
 import KeyBoard from '../components/KeyBoard';
 import ScreenInfo from '../components/ScreenInfo';
@@ -48,6 +48,7 @@ class App extends React.Component<IAppProps, IAppState> {
       this.props.actions.setVolume();
     } else if (init === 0) {// 初始化完毕
       if (code === 2 || code === 0 ) {// 开始游戏
+        // 开始游戏按钮 code = 2
         this.props.actions.setGameInit(1);
         this.props.actions.clearCode();
         this.props.actions.startGame();
@@ -72,10 +73,12 @@ class App extends React.Component<IAppProps, IAppState> {
         this.props.actions.pauseGame({pause: false});
         this.props.actions.startGame();
       } else if (code === 0 && !this.props.game.get('pause')) {
+        // 重新开始 code = 0
         this.props.actions.endGame();
         this.props.actions.setGameInit(-1);
         this.props.actions.initSnack();
-        setTimeout(this.handleKeyDown.bind(null, 2), 0);
+        var throttled = _.throttle(this.handleKeyDown, 100, { 'trailing': false });
+        throttled(2);
       }
       this.props.actions.setSnackDirection(direction);
     } else if (init === -2) {// 设置游戏模式
@@ -86,7 +89,8 @@ class App extends React.Component<IAppProps, IAppState> {
         this.props.actions.startGame();
       }
     } else if (init === -1 && code === 2) {// 初始化中
-      setTimeout(this.handleKeyDown.bind(null, 2), 0);
+      var throttled = _.throttle(this.handleKeyDown, 100, { 'trailing': false });
+      throttled(2);
     }
     setTimeout(this.resetHandle, 250);
   }
@@ -95,7 +99,8 @@ class App extends React.Component<IAppProps, IAppState> {
   }
   keyDown = (event: any) => {
     const code = event.nativeEvent.keyCode;
-    this.handleKeyDown(code);
+    var throttled = _.throttle(this.handleKeyDown, 100, { 'trailing': false });
+    throttled(code);
   }
   render() {
     return (
