@@ -1,4 +1,4 @@
 export default store => next => action => {
-  console.log(action);
+  if (action.type !== 'set game time') { console.log(action); }
   return next(action);
 };
