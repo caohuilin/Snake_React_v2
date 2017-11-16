@@ -33,31 +33,38 @@ export class ISnake extends ISnakeRecord {
   }[];
 }
 
+const initSnake = (state) => {
+  const modal = getModal(getStore().getState());
+  const index = modal === 1 ? 3 : 1;
+  const x = Math.floor(Math.random() * (column - index)) + 1;
+  const y = Math.floor(Math.random() * (row - index)) + 1;
+  if (y === 1 + modal) {
+    return state;
+  }
+  return state.set(
+    'snake',
+    Immutable.fromJS([
+      {
+        x: x,
+        y: y
+      },
+      {
+        x: x,
+        y: y - 1
+      }
+    ])
+  );
+};
+
 const initialState = new ISnake();
 
 export default handleActions(
   {
     'init snake'(state: ISnake = initialState) {
-      const modal = getModal(getStore().getState());
-      const index = modal === 1 ? 3 : 1;
-      const x = Math.floor(Math.random() * (column - index)) + 1;
-      const y = Math.floor(Math.random() * (row - index)) + 1;
-      if (y === 1 + modal) {
-        return state;
-      }
-      return state.set(
-        'snake',
-        Immutable.fromJS([
-          {
-            x: x,
-            y: y
-          },
-          {
-            x: x,
-            y: y - 1
-          }
-        ])
-      );
+      return initSnake(state);
+    },
+    'set modal'(state: ISnake = initialState) {
+      return initSnake(state);
     },
     'set snake'(state: ISnake = initialState, action: any) {
       return state.set('snake', Immutable.fromJS(action.payload));
