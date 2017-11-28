@@ -59,7 +59,6 @@ export default class GameMain extends React.Component<
   IGameMainProps,
   IGameMainState
 > {
-  timer = null;
   throttled = null;
   constructor(props: IGameMainProps) {
     super(props);
@@ -125,7 +124,7 @@ export default class GameMain extends React.Component<
       const currentSnake = snake.toJS();
       const currentFood = food.toJS();
       const currentDirection = this.getNextDirection();
-      if (gameTime % 10 === 0) {
+      if (gameTime % 50 === 0) {
         let next = this.getNext(currentSnake[0], currentDirection);
         if (this.isDead(next)) {
           this.dead();
@@ -143,7 +142,7 @@ export default class GameMain extends React.Component<
           this.props.actions.setSnackCurrentDirection(currentDirection);
         }
       }
-      if (gameTime % 5 === 0) {
+      if (gameTime % 25 === 0) {
         this.setFoodShowOrHide();
       }
     }
@@ -255,7 +254,7 @@ export default class GameMain extends React.Component<
     if (this.timer) {
       clearInterval(this.timer);
     }
-    this.timer = setInterval(this.props.actions.setGameTime, 50);
+
   }
   componentWillReceiveProps(nextProps: IGameMainProps) {
     if (nextProps.game.get('time') !== this.props.game.get('time')) {
