@@ -32,6 +32,15 @@ interface IAppState {}
   })
 )
 class App extends React.Component<IAppProps, IAppState> {
+  timer = null;
+  componentDidMount() {
+    this.timer = setInterval(this.props.actions.setGameTime, 10);
+  }
+  componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
   handleKeyDown = code => {
     if (code === 1) {
       this.props.actions.setVolume();
